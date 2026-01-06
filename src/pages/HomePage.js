@@ -18,7 +18,12 @@ const HomePage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const { data } = await axios.get('${process.env.REACT_APP_API_URL}/api/products');
+        const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/products`);
+
+        if (!Array.isArray(data)) {
+          console.error("API did not return array:", data);
+          return;
+        }
 
         // ✅ Featured = trending
         const featured = data.filter((p) => p.isFeatured);
