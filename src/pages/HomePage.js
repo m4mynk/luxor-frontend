@@ -18,7 +18,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const { data } = await axios.get('http://localhost:3001/api/products');
+        const { data } = await axios.get('${process.env.REACT_APP_API_URL}/api/products');
 
         // ✅ Featured = trending
         const featured = data.filter((p) => p.isFeatured);

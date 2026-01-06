@@ -42,7 +42,7 @@ const ProductDetailPage = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await axios.get(`http://localhost:3001/api/products/${id}`);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/products/${id}`);
         setProduct(res.data);
 
         // ✅ Smart defaults for size/color + image (variant-aware and imagesByColor-aware)
@@ -75,7 +75,7 @@ const ProductDetailPage = () => {
         // ✅ Fetch related products by category
         if (res.data.category) {
           const related = await axios.get(
-            `http://localhost:3001/api/products?category=${res.data.category}`
+            `${process.env.REACT_APP_API_URL}/api/products?category=${res.data.category}`
           );
           setRelatedProducts(
             related.data.filter((p) => p._id !== res.data._id).slice(0, 6)
@@ -440,14 +440,14 @@ useEffect(() => {
             }
             try {
               await axios.post(
-                `http://localhost:3001/api/products/${id}/reviews`,
+                `${process.env.REACT_APP_API_URL}/api/products/${id}/reviews`,
                 { rating: Number(rating), comment },
                 { withCredentials: true }
               );
               toast.success("Review submitted!");
               setRating(0);
               setComment("");
-              const res = await axios.get(`http://localhost:3001/api/products/${id}`);
+              const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/products/${id}`);
               setProduct(res.data);
             } catch (err) {
               toast.error(err.response?.data?.message || "Error submitting review");

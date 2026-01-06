@@ -3,7 +3,7 @@ import { useWishlist } from "../context/WishlistContext";
 import { useCart } from "../context/CartContext";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import axios from "axios";
+import api from "../services/api";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -51,7 +51,7 @@ const Wishlist = () => {
   useEffect(() => {
     const fetchSuggestions = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3001/api/products");
+        const { data } = await axios.get("${process.env.REACT_APP_API_URL}/api/products");
         const suggested = [...data]
           .filter((p) => p.isFeatured || p.averageRating >= 4)
           .slice(0, 10); // take top 10

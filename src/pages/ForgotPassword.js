@@ -14,7 +14,7 @@ const ForgotPassword = () => {
   const handleSendOtp = async () => {
     if (!email) return toast.error('Please enter your email');
     try {
-      await axios.post('http://localhost:3001/api/auth/forgot-password', { email });
+      await axios.post('${process.env.REACT_APP_API_URL}/api/auth/forgot-password', { email });
       toast.success('OTP sent to email');
       setStep(2);
     } catch (err) {
@@ -25,7 +25,7 @@ const ForgotPassword = () => {
   const handleResetPassword = async () => {
     if (!code || !newPassword) return toast.error('Fill all fields');
     try {
-      await axios.post('http://localhost:3001/api/auth/reset-password', {
+      await axios.post('${process.env.REACT_APP_API_URL}/api/auth/reset-password', {
         email,
         code,
         newPassword,

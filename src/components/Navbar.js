@@ -26,7 +26,7 @@ const Navbar = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get('http://localhost:3001/api/auth/me', { withCredentials: true });
+        const res = await axios.get('${process.env.REACT_APP_API_URL}/api/auth/me', { withCredentials: true });
         setUser(res.data.user);
       } catch (err) {
         setUser(null);
@@ -45,7 +45,7 @@ const Navbar = () => {
 
       setIsSearching(true);
       try {
-        const res = await axios.get(`http://localhost:3001/api/products?search=${encodeURIComponent(searchTerm)}`);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/products?search=${encodeURIComponent(searchTerm)}`);
         let results = res.data;
 
         // normalize category matches
@@ -69,7 +69,7 @@ const Navbar = () => {
   // Logout
   const handleLogout = async () => {
     try {
-      await axios.post('http://localhost:3001/api/auth/logout', {}, { withCredentials: true });
+      await axios.post('${process.env.REACT_APP_API_URL}/api/auth/logout', {}, { withCredentials: true });
       setUser(null);
       navigate('/login');
     } catch (err) {

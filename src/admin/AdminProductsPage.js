@@ -50,7 +50,7 @@ export default function AdminProductsPage() {
       if (searchTerm.trim()) params.q = searchTerm.trim();
       if (filterCategory) params.category = filterCategory;
       if (filterActive) params.active = filterActive === 'true';
-      const { data, headers } = await axios.get('http://localhost:3001/api/products', {
+      const { data, headers } = await axios.get('${process.env.REACT_APP_API_URL}/api/products', {
         params,
         withCredentials: true,
       });
@@ -231,7 +231,7 @@ formData.append("variants", JSON.stringify(cleanVariants));
         console.log(pair[0], pair[1]);
       }
 
-      await axios.post("http://localhost:3001/api/products", formData, {
+      await axios.post("${process.env.REACT_APP_API_URL}/api/products", formData, {
         withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -257,7 +257,7 @@ formData.append("variants", JSON.stringify(cleanVariants));
 
       console.log("📤 Sending JSON payload:", payload);
 
-      await axios.post("http://localhost:3001/api/products", payload, {
+      await axios.post("${process.env.REACT_APP_API_URL}/api/products", payload, {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       });
@@ -327,7 +327,7 @@ formData.append("variants", JSON.stringify(cleanVariants));
       }
 
       await axios.put(
-        `http://localhost:3001/api/products/${editingProduct._id}`,
+        `${process.env.REACT_APP_API_URL}/api/products/${editingProduct._id}`,
         formData,
         {
           withCredentials: true,
@@ -357,7 +357,7 @@ formData.append("variants", JSON.stringify(cleanVariants));
       console.log("📤 Updating with JSON payload:", payload);
 
       await axios.put(
-        `http://localhost:3001/api/products/${editingProduct._id}`,
+        `${process.env.REACT_APP_API_URL}/api/products/${editingProduct._id}`,
         payload,
         {
           withCredentials: true,
@@ -385,7 +385,7 @@ formData.append("variants", JSON.stringify(cleanVariants));
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this product?')) return;
     try {
-      await axios.delete(`http://localhost:3001/api/products/${id}`, {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/products/${id}`, {
   withCredentials: true,
 });
       toast.success('Product deleted');
@@ -410,7 +410,7 @@ formData.append("variants", JSON.stringify(cleanVariants));
   if (!window.confirm(`Are you sure you want to delete ${selectedProducts.size} products?`)) return;
 
   try {
-    await axios.delete("http://localhost:3001/api/products", {
+    await axios.delete("${process.env.REACT_APP_API_URL}/api/products", {
       data: { ids: Array.from(selectedProducts) }, // send array of IDs
       withCredentials: true,
     });
@@ -431,7 +431,7 @@ formData.append("variants", JSON.stringify(cleanVariants));
     const newStatus = !product.active; // flip the status
 
     await axios.put(
-      `http://localhost:3001/api/products/${product._id}`,
+      `${process.env.REACT_APP_API_URL}/api/products/${product._id}`,
       { active: newStatus }, // only send the active field
       { withCredentials: true }
     );

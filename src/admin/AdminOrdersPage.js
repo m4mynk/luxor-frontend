@@ -1,6 +1,6 @@
 // src/admin/AdminOrdersPage.js
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../services/api";
 import toast from "react-hot-toast";
 
 const AdminOrdersPage = () => {
@@ -26,7 +26,7 @@ const AdminOrdersPage = () => {
 
   const checkAdmin = async () => {
     try {
-      const res = await axios.get("http://localhost:3001/api/auth/me", {
+      const res = await axios.get("${process.env.REACT_APP_API_URL}/api/auth/me", {
         withCredentials: true,
       });
       if (res.data?.user?.role === "admin") {
@@ -45,7 +45,7 @@ const AdminOrdersPage = () => {
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get("http://localhost:3001/api/orders", {
+      const res = await axios.get("${process.env.REACT_APP_API_URL}/api/orders", {
         withCredentials: true,
       });
       setOrders(res.data);
@@ -66,7 +66,7 @@ const AdminOrdersPage = () => {
     const { orderId, newStatus } = confirmModal;
     try {
       await axios.put(
-        `http://localhost:3001/api/orders/${orderId}/status`,
+        `${process.env.REACT_APP_API_URL}/api/orders/${orderId}/status`,
         { status: newStatus },
         { withCredentials: true }
       );
@@ -78,7 +78,7 @@ const AdminOrdersPage = () => {
       if (updatedOrder) {
         setSelectedOrder({ ...updatedOrder, status: newStatus });
       } else {
-        const res = await axios.get(`http://localhost:3001/api/orders/${orderId}`, {
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}`, {
           withCredentials: true,
         });
         setSelectedOrder(res.data);
@@ -95,7 +95,7 @@ const AdminOrdersPage = () => {
   const handleCancelOrder = async (orderId) => {
     try {
       await axios.put(
-        `http://localhost:3001/api/orders/${orderId}/cancel`,
+        `${process.env.REACT_APP_API_URL}/api/orders/${orderId}/cancel`,
         {},
         { withCredentials: true }
       );

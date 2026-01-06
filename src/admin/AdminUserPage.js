@@ -14,7 +14,7 @@ const AdminUserPage = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('http://localhost:3001/api/users', { withCredentials: true });
+      const res = await axios.get('${process.env.REACT_APP_API_URL}/api/users', { withCredentials: true });
       setUsers(res.data);
       setLoading(false);
     } catch (err) {
@@ -27,7 +27,7 @@ const AdminUserPage = () => {
   const handleDelete = async (userId) => {
     if (!window.confirm('Are you sure you want to delete this user?')) return;
     try {
-      await axios.delete(`http://localhost:3001/api/users/${userId}`, { withCredentials: true });
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/users/${userId}`, { withCredentials: true });
       toast.success('User deleted successfully');
       fetchUsers();
     } catch (err) {
@@ -39,7 +39,7 @@ const AdminUserPage = () => {
   const handleRoleChange = async (userId, newRole) => {
     try {
       await axios.put(
-        `http://localhost:3001/api/users/${userId}/role`,
+        `${process.env.REACT_APP_API_URL}/api/users/${userId}/role`,
         { role: newRole },
         { withCredentials: true }
       );

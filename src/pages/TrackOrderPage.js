@@ -16,7 +16,7 @@ const TrackOrderPage = () => {
 
     try {
       setLoading(true);
-      const res = await axios.post('http://localhost:3001/api/orders/track', { orderId, email });
+      const res = await axios.post('${process.env.REACT_APP_API_URL}/api/orders/track', { orderId, email });
       setOrderDetails(res.data);
       toast.success('Order found!');
     } catch (err) {
@@ -91,7 +91,7 @@ const TrackOrderPage = () => {
             <button
               onClick={async () => {
                 try {
-                  const res = await axios.post('http://localhost:3001/api/orders/cancel', {
+                  const res = await axios.post('${process.env.REACT_APP_API_URL}/api/orders/cancel', {
                     orderId: orderDetails._id,
                     email,
                   });

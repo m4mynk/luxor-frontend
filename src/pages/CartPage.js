@@ -24,7 +24,7 @@ const CartPage = () => {
       try {
         const updates = {};
         for (let item of cartItems) {
-          const { data } = await axios.get(`http://localhost:3001/api/products/${item._id}/stock`);
+          const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/products/${item._id}/stock`);
           updates[item._id] = data.countInStock;
         }
         setLiveStock(updates);

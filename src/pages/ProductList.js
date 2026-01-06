@@ -47,7 +47,7 @@ const ProductList = () => {
         if (maxPrice) params.append('maxPrice', maxPrice);
         if (searchTerm) params.append('search', searchTerm);
 
-        const res = await axios.get(`http://localhost:3001/api/products?${params.toString()}`);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/products?${params.toString()}`);
         setProducts(res.data);
       } catch (error) {
         console.error("Error fetching products:", error);

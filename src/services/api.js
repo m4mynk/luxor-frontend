@@ -1,39 +1,44 @@
-import axios from 'axios';
+import axios from "axios";
 
 const api = axios.create({
-  baseURL: 'http://localhost:3001', // Your backend server
-  withCredentials: true,            // ✅ Send cookies
+  baseURL: process.env.REACT_APP_API_URL,
+  withCredentials: true, // ✅ cookies
 });
 
+// AUTH
 export const handleRegister = async (userData) => {
   try {
-    const res = await api.post('/auth/register', userData);
+    const res = await api.post("/api/auth/register", userData);
     return res.data;
   } catch (error) {
-    throw error.response?.data?.message || 'Registration failed';
+    throw error.response?.data?.message || "Registration failed";
   }
 };
 
 export const handleLogin = async (email, password) => {
   try {
-    const res = await api.post('/auth/login', { email, password });
+    const res = await api.post("/api/auth/login", { email, password });
     return res.data;
   } catch (error) {
-    throw error.response?.data?.message || 'Login failed';
+    throw error.response?.data?.message || "Login failed";
   }
 };
+
 export const getCurrentUser = async () => {
   try {
-    const res = await api.get('/auth/protected');
+    const res = await api.get("/api/auth/me");
     return res.data;
   } catch (error) {
-    throw error.response?.data?.message || 'Not authenticated';
+    throw error.response?.data?.message || "Not authenticated";
   }
 };
+
 export const logout = async () => {
   try {
-    await api.post('/auth/logout');
+    await api.post("/api/auth/logout");
   } catch (error) {
-    console.error('Logout failed:', error);
+    console.error("Logout failed:", error);
   }
 };
+
+export default api;

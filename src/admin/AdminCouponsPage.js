@@ -1,6 +1,6 @@
 // src/admin/AdminCouponsPage.js
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../services/api";
 import toast from "react-hot-toast";
 
 const AdminCouponsPage = () => {
@@ -16,7 +16,7 @@ const AdminCouponsPage = () => {
 
   const fetchCoupons = async () => {
     try {
-      const res = await axios.get("http://localhost:3001/api/coupons", {
+      const res = await axios.get("${process.env.REACT_APP_API_URL}/api/coupons", {
         withCredentials: true,
       });
       setCoupons(res.data);
@@ -33,7 +33,7 @@ const AdminCouponsPage = () => {
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3001/api/coupons", form, {
+      await axios.post("${process.env.REACT_APP_API_URL}/api/coupons", form, {
         withCredentials: true,
       });
       toast.success("Coupon created!");
@@ -53,7 +53,7 @@ const AdminCouponsPage = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3001/api/coupons/${id}`, {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/coupons/${id}`, {
         withCredentials: true,
       });
       toast.success("Coupon deleted!");

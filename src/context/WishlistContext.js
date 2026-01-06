@@ -45,7 +45,7 @@ useEffect(() => {
       const updatedItems = await Promise.all(
         wishlistItems.map(async (item) => {
           try {
-            const res = await axios.get(`http://localhost:3001/api/products/${item._id}`);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/products/${item._id}`);
             return {
               ...item,
               countInStock: res.data.countInStock,

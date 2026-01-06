@@ -13,7 +13,7 @@ const OrderDetailPage = () => {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const res = await axios.get(`http://localhost:3001/api/orders/${id}`, {
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders/${id}`, {
           withCredentials: true,
         });
         setOrder(res.data);
@@ -29,7 +29,7 @@ const OrderDetailPage = () => {
   const handleCancelOrder = async () => {
     try {
       await axios.put(
-        `http://localhost:3001/api/orders/${id}/cancel`,
+        `${process.env.REACT_APP_API_URL}/api/orders/${id}/cancel`,
         {},
         { withCredentials: true }
       );

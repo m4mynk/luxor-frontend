@@ -8,7 +8,7 @@ const AccountDetails = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get('http://localhost:3001/api/auth/me', { withCredentials: true });
+        const res = await axios.get('${process.env.REACT_APP_API_URL}/api/auth/me', { withCredentials: true });
         setUser(res.data.user);
       } catch (err) {
         console.error(err);
@@ -60,7 +60,7 @@ const AccountDetails = () => {
                   state: e.target.state.value,
                 },
               };
-              const res = await axios.post('http://localhost:3001/api/auth/update-address', formData, {
+              const res = await axios.post('${process.env.REACT_APP_API_URL}/api/auth/update-address', formData, {
                 withCredentials: true,
               });
               setUser(res.data.user);

@@ -53,7 +53,7 @@ const PayOnlinePage = () => {
     try {
       setPaying(true);
       // Create Razorpay order (amount decided by backend)
-      const res = await fetch("http://localhost:3001/api/payment/order", {
+      const res = await fetch("${process.env.REACT_APP_API_URL}/api/payment/order", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -85,7 +85,7 @@ const PayOnlinePage = () => {
           netbanking: method === "netbanking",
         },
         handler: async function (response) {
-          await fetch("http://localhost:3001/api/payment/verify", {
+          await fetch("${process.env.REACT_APP_API_URL}/api/payment/verify", {
             method: "POST",
             credentials: "include",
             headers: { "Content-Type": "application/json" },

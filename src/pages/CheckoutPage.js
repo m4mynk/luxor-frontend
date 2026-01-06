@@ -48,7 +48,7 @@ const CheckoutPage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get('http://localhost:3001/api/auth/me', { withCredentials: true });
+        const res = await axios.get('${process.env.REACT_APP_API_URL}/api/auth/me', { withCredentials: true });
         const user = res.data.user;
 
         setFormData((prev) => ({
@@ -94,7 +94,7 @@ const CheckoutPage = () => {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:3001/api/coupons/validate",
+        "${process.env.REACT_APP_API_URL}/api/coupons/validate",
         { code: couponCode, totalPrice: totalBeforeDiscount },  // ✅ backend expects totalPrice
         { withCredentials: true }
       );
@@ -137,7 +137,7 @@ const CheckoutPage = () => {
     try {
       // Save/update address
       await axios.post(
-        'http://localhost:3001/api/auth/update-address',
+        '${process.env.REACT_APP_API_URL}/api/auth/update-address',
         {
           phone: formData.phone,
           address: {
@@ -183,7 +183,7 @@ const CheckoutPage = () => {
       // ✅ COD flow stays same
       if (paymentMethod === "COD") {
         const response = await axios.post(
-          'http://localhost:3001/api/orders',
+          '${process.env.REACT_APP_API_URL}/api/orders',
           {
             orderItems,
             paymentMethod: "Cash on Delivery",
@@ -214,7 +214,7 @@ const CheckoutPage = () => {
       // ✅ Pay Online → redirect to UPI page
 if (paymentMethod === "Online") {
   const orderRes = await axios.post(
-    "http://localhost:3001/api/orders",
+    "${process.env.REACT_APP_API_URL}/api/orders",
     {
       orderItems,
       paymentMethod: "Online Payment",
