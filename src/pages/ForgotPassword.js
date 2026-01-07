@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
-const API = process.env.REACT_APP_API_URL;
+const API = process.env.REACT_APP_API_URL?.replace(/\/$/, "");
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -25,13 +25,13 @@ const ForgotPassword = () => {
 
       await axios.post(
         `${API}/api/auth/forgot-password`,
-        { email },
-        { withCredentials: true }
+        { email }
       );
       toast.success('OTP sent to email');
       setStep(2);
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to send OTP');
+      console.error("❌ Forgot-password error:", err.response || err);
+      toast.error(err.response?.data?.message || "Failed to send OTP");
     }
   };
 
