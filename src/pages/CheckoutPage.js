@@ -26,17 +26,20 @@ useEffect(() => {
     sourceItems = Array.isArray(cartItems) ? cartItems : [];
   }
 
-  const safeItems = sourceItems.filter(
-    (item) =>
-      item &&
-      typeof item === "object" &&
-      item.name &&
-      typeof item.price === "number" &&
-      typeof item.quantity === "number"
-  );
+  const safeItems = sourceItems
+    .filter(item => item && typeof item === "object")
+    .map(item => ({
+      ...item,
+      quantity: item.quantity ?? 1,
+    }))
+    .filter(item => item.name && typeof item.price === "number");
 
   setItems(safeItems);
 }, [isBuyNow, cartItems]);
+
+if (!Array.isArray(items)) {
+  return <div className="text-center py-20">Loading checkout…</div>;
+}
 
   const [loadingAddress, setLoadingAddress] = useState(true);
   const [placingOrder, setPlacingOrder] = useState(false);
@@ -61,7 +64,7 @@ useEffect(() => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get('${process.env.REACT_APP_API_URL}/api/auth/me', { withCredentials: true });
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/auth/me`, { withCredentials: true });
         const user = res.data.user;
 
         setFormData((prev) => ({
@@ -110,7 +113,7 @@ useEffect(() => {
 
     try {
       const { data } = await axios.post(
-        "${process.env.REACT_APP_API_URL}/api/coupons/validate",
+        `${process.env.REACT_APP_API_URL}/api/coupons/validate`,
         { code: couponCode, totalPrice: totalBeforeDiscount },  // ✅ backend expects totalPrice
         { withCredentials: true }
       );
@@ -153,7 +156,7 @@ useEffect(() => {
     try {
       // Save/update address
       await axios.post(
-        '${process.env.REACT_APP_API_URL}/api/auth/update-address',
+        `${process.env.REACT_APP_API_URL}/api/auth/update-address`,
         {
           phone: formData.phone,
           address: {
@@ -199,7 +202,7 @@ useEffect(() => {
       // ✅ COD flow stays same
       if (paymentMethod === "COD") {
         const response = await axios.post(
-          '${process.env.REACT_APP_API_URL}/api/orders',
+          `${process.env.REACT_APP_API_URL}/api/orders`,
           {
             orderItems,
             paymentMethod: "Cash on Delivery",
@@ -230,7 +233,7 @@ useEffect(() => {
       // ✅ Pay Online → redirect to UPI page
 if (paymentMethod === "Online") {
   const orderRes = await axios.post(
-    "${process.env.REACT_APP_API_URL}/api/orders",
+    `${process.env.REACT_APP_API_URL}/api/orders`,
     {
       orderItems,
       paymentMethod: "Online Payment",
@@ -348,7 +351,9 @@ if (paymentMethod === "Online") {
       {/* Order Summary */}
       <div className="bg-white shadow p-6 rounded mb-6">
         <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-        {items.map((item, index) => (
+        {items.length === 0 ? (
+          <p className="text-gray-500">No items to checkout.</p>
+        ) : items.map((item, index) => (
           <div key={item?._id || item?.id || index} className="flex justify-between mb-2">
             <span>
               {item?.name || "Product"} {item?.size ? `(${item.size})` : ""} × {item?.quantity || 1}
