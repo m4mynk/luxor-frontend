@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
+const API = process.env.REACT_APP_API_URL;
+
 const ForgotPassword = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -14,7 +16,18 @@ const ForgotPassword = () => {
   const handleSendOtp = async () => {
     if (!email) return toast.error('Please enter your email');
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/forgot-password`, { email });
+      if (!API) {
+        console.error("❌ REACT_APP_API_URL is undefined");
+        return toast.error("Server configuration error");
+      }
+
+      console.log("📡 Sending forgot-password request to:", `${API}/api/auth/forgot-password`);
+
+      await axios.post(
+        `${API}/api/auth/forgot-password`,
+        { email },
+        { withCredentials: true }
+      );
       toast.success('OTP sent to email');
       setStep(2);
     } catch (err) {
@@ -25,7 +38,7 @@ const ForgotPassword = () => {
   const handleResetPassword = async () => {
     if (!code || !newPassword) return toast.error('Fill all fields');
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/reset-password`, {
+      await axios.post(`${API}/api/auth/reset-password`, {
         email,
         code,
         newPassword,
