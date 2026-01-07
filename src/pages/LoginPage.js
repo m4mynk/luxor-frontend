@@ -45,7 +45,9 @@ const LoginPage = () => {
       }
     } catch (err) {
       console.error(err);
-      toast.error('Login failed. Please check your credentials.');
+      toast.error(
+  err.response?.data?.message || "Login failed. Please check your credentials."
+);
     }
   };
 

@@ -19,7 +19,7 @@ const RegisterPage = () => {
       return;
     }
     try {
-      await axios.post('${process.env.REACT_APP_API_URL}/api/auth/send-otp', { email });
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/send-otp`, { email });
       toast.success('OTP sent to your email');
       setStep(2);
     } catch (err) {
@@ -33,7 +33,7 @@ const RegisterPage = () => {
       return;
     }
     try {
-      await axios.post('${process.env.REACT_APP_API_URL}/api/auth/verify-email', {
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/verify-email`, {
         email,
         code: otp
       });
@@ -52,7 +52,7 @@ const RegisterPage = () => {
       return;
     }
     try {
-      await axios.post('${process.env.REACT_APP_API_URL}/api/auth/register', {
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/register`, {
         name,
         email,
         password,
