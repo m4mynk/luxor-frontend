@@ -16,14 +16,27 @@ const CheckoutPage = () => {
 
   const [items, setItems] = useState([]);
 
-  useEffect(() => {
-    if (isBuyNow) {
-      const buyNowItems = JSON.parse(localStorage.getItem("buyNowItems") || "[]");
-      setItems(buyNowItems);
-    } else {
-      setItems(cartItems);
-    }
-  }, [isBuyNow, cartItems]);
+useEffect(() => {
+  if (isBuyNow) {
+    const raw = JSON.parse(localStorage.getItem("buyNowItems") || "[]");
+
+    // 🔐 Normalize Buy Now data
+    const normalized = Array.isArray(raw) ? raw : [raw];
+
+    // 🔐 Filter out invalid items to avoid crashes
+    const safeItems = normalized.filter(
+      (item) =>
+        item &&
+        item.name &&
+        item.price !== undefined &&
+        item.quantity !== undefined
+    );
+
+    setItems(safeItems);
+  } else {
+    setItems(cartItems);
+  }
+}, [isBuyNow, cartItems]);
 
   const [loadingAddress, setLoadingAddress] = useState(true);
   const [placingOrder, setPlacingOrder] = useState(false);
