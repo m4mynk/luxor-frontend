@@ -17,25 +17,25 @@ const CheckoutPage = () => {
   const [items, setItems] = useState([]);
 
 useEffect(() => {
+  let sourceItems = [];
+
   if (isBuyNow) {
     const raw = JSON.parse(localStorage.getItem("buyNowItems") || "[]");
-
-    // 🔐 Normalize Buy Now data
-    const normalized = Array.isArray(raw) ? raw : [raw];
-
-    // 🔐 Filter out invalid items to avoid crashes
-    const safeItems = normalized.filter(
-      (item) =>
-        item &&
-        item.name &&
-        item.price !== undefined &&
-        item.quantity !== undefined
-    );
-
-    setItems(safeItems);
+    sourceItems = Array.isArray(raw) ? raw : [raw];
   } else {
-    setItems(cartItems);
+    sourceItems = Array.isArray(cartItems) ? cartItems : [];
   }
+
+  const safeItems = sourceItems.filter(
+    (item) =>
+      item &&
+      typeof item === "object" &&
+      item.name &&
+      typeof item.price === "number" &&
+      typeof item.quantity === "number"
+  );
+
+  setItems(safeItems);
 }, [isBuyNow, cartItems]);
 
   const [loadingAddress, setLoadingAddress] = useState(true);
@@ -84,7 +84,10 @@ useEffect(() => {
     fetchUser();
   }, []);
 
-  const subtotal = items.reduce((acc, item) => acc + item.price * item.quantity, 0); // ⬅️ changed to items
+  const subtotal = items.reduce(
+    (acc, item) => acc + (item?.price || 0) * (item?.quantity || 0),
+    0
+  );
   const shippingFee = shippingOption === 'express' ? 99 : 0;
   const totalBeforeDiscount = subtotal + shippingFee;
   const total = finalPrice || totalBeforeDiscount;  // ✅ use final price if coupon applied
@@ -345,10 +348,12 @@ if (paymentMethod === "Online") {
       {/* Order Summary */}
       <div className="bg-white shadow p-6 rounded mb-6">
         <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-        {items.map((item) => ( // ⬅️ changed to items
-          <div key={item._id || item.id} className="flex justify-between mb-2">
-            <span>{item.name} ({item.size}) × {item.quantity}</span>
-            <span>₹{item.price * item.quantity}</span>
+        {items.map((item, index) => (
+          <div key={item?._id || item?.id || index} className="flex justify-between mb-2">
+            <span>
+              {item?.name || "Product"} {item?.size ? `(${item.size})` : ""} × {item?.quantity || 1}
+            </span>
+            <span>₹{(item?.price || 0) * (item?.quantity || 1)}</span>
           </div>
         ))}
         <hr className="my-4" />
