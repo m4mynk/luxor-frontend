@@ -69,11 +69,11 @@ if (!Array.isArray(items)) {
 
         setFormData((prev) => ({
           ...prev,
-          name: user.name || '',
-          phone: user.address?.phone || '',
-          address: user.address?.street || '',
-          city: user.address?.city || '',
-          postalCode: user.address?.postalCode || ''
+          name: user?.name || '',
+          phone: user?.address?.phone || '',
+          address: user?.address?.street || '',
+          city: user?.address?.city || '',
+          postalCode: user?.address?.postalCode || ''
         }));
 
         setLoadingAddress(false);
