@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import api from "../services/api";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -34,7 +35,7 @@ const AdminDashboardPage = () => {
     const fetchStats = async () => {
       try {
         // ✅ Fetch core stats
-        const res = await axios.get("${process.env.REACT_APP_API_URL}/api/admin/dashboard", {
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/dashboard`, {
           withCredentials: true,
         });
         setStats({
@@ -46,7 +47,7 @@ const AdminDashboardPage = () => {
         });
 
         // ✅ Fetch analytics
-        const statusRes = await axios.get("${process.env.REACT_APP_API_URL}/api/orders/analytics/status", {
+        const statusRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders/analytics/status`, {
           withCredentials: true,
         });
         setStatusData(
@@ -56,7 +57,7 @@ const AdminDashboardPage = () => {
           }))
         );
 
-        const salesRes = await axios.get("${process.env.REACT_APP_API_URL}/api/orders/analytics/sales", {
+        const salesRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders/analytics/sales`, {
           withCredentials: true,
         });
         setSalesData(
