@@ -26,14 +26,14 @@ const Navbar = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get('${process.env.REACT_APP_API_URL}/api/auth/me', { withCredentials: true });
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/auth/me`, { withCredentials: true });
         setUser(res.data.user);
       } catch (err) {
         setUser(null);
       }
     };
     fetchUser();
-  }, []);
+  }, [window.location.pathname]);
 
   // 🔎 Live search effect
   useEffect(() => {
@@ -69,7 +69,7 @@ const Navbar = () => {
   // Logout
   const handleLogout = async () => {
     try {
-      await axios.post('${process.env.REACT_APP_API_URL}/api/auth/logout', {}, { withCredentials: true });
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/logout`, {}, { withCredentials: true });
       setUser(null);
       navigate('/login');
     } catch (err) {
