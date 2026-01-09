@@ -33,7 +33,7 @@ const Navbar = () => {
       }
     };
     fetchUser();
-  }, [window.location.pathname]);
+  }, []);
 
   // 🔎 Live search effect
   useEffect(() => {
