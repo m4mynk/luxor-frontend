@@ -16,7 +16,7 @@ const AdminCouponsPage = () => {
 
   const fetchCoupons = async () => {
     try {
-      const res = await axios.get("${process.env.REACT_APP_API_URL}/api/coupons", {
+      const res = await api.get("/api/coupons", {
         withCredentials: true,
       });
       setCoupons(res.data);
@@ -33,7 +33,7 @@ const AdminCouponsPage = () => {
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("${process.env.REACT_APP_API_URL}/api/coupons", form, {
+      await api.post("/api/coupons", form, {
         withCredentials: true,
       });
       toast.success("Coupon created!");
@@ -53,7 +53,7 @@ const AdminCouponsPage = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/api/coupons/${id}`, {
+      await api.delete(`/api/coupons/${id}`, {
         withCredentials: true,
       });
       toast.success("Coupon deleted!");

@@ -1,6 +1,6 @@
 // src/admin/AdminUserPage.js
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import toast from 'react-hot-toast';
 
 const AdminUserPage = () => {
@@ -14,7 +14,7 @@ const AdminUserPage = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('${process.env.REACT_APP_API_URL}/api/users', { withCredentials: true });
+      const res = await api.get('/api/users');
       setUsers(res.data);
       setLoading(false);
     } catch (err) {
@@ -27,7 +27,7 @@ const AdminUserPage = () => {
   const handleDelete = async (userId) => {
     if (!window.confirm('Are you sure you want to delete this user?')) return;
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/api/users/${userId}`, { withCredentials: true });
+      await api.delete(`/api/users/${userId}`);
       toast.success('User deleted successfully');
       fetchUsers();
     } catch (err) {
@@ -38,11 +38,7 @@ const AdminUserPage = () => {
 
   const handleRoleChange = async (userId, newRole) => {
     try {
-      await axios.put(
-        `${process.env.REACT_APP_API_URL}/api/users/${userId}/role`,
-        { role: newRole },
-        { withCredentials: true }
-      );
+      await api.put(`/api/users/${userId}/role`, { role: newRole });
       toast.success('User role updated');
       fetchUsers();
     } catch (err) {

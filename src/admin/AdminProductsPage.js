@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import axios from 'axios';
+import api from "../utils/api";
 import toast, { Toaster } from 'react-hot-toast';
 
 const initialProductForm = {
@@ -50,7 +50,7 @@ export default function AdminProductsPage() {
       if (searchTerm.trim()) params.q = searchTerm.trim();
       if (filterCategory) params.category = filterCategory;
       if (filterActive) params.active = filterActive === 'true';
-      const { data, headers } = await axios.get('${process.env.REACT_APP_API_URL}/api/products', {
+      const { data, headers } = await api.get('/api/products', {
         params,
         withCredentials: true,
       });
@@ -231,7 +231,7 @@ formData.append("variants", JSON.stringify(cleanVariants));
         console.log(pair[0], pair[1]);
       }
 
-      await axios.post("${process.env.REACT_APP_API_URL}/api/products", formData, {
+      await api.post("/api/products", formData, {
         withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -257,7 +257,7 @@ formData.append("variants", JSON.stringify(cleanVariants));
 
       console.log("📤 Sending JSON payload:", payload);
 
-      await axios.post("${process.env.REACT_APP_API_URL}/api/products", payload, {
+      await api.post("/api/products", payload, {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       });
@@ -326,8 +326,8 @@ formData.append("variants", JSON.stringify(cleanVariants));
         console.log(pair[0], pair[1]);
       }
 
-      await axios.put(
-        `${process.env.REACT_APP_API_URL}/api/products/${editingProduct._id}`,
+      await api.put(
+        `/api/products/${editingProduct._id}`,
         formData,
         {
           withCredentials: true,
@@ -356,8 +356,8 @@ formData.append("variants", JSON.stringify(cleanVariants));
 
       console.log("📤 Updating with JSON payload:", payload);
 
-      await axios.put(
-        `${process.env.REACT_APP_API_URL}/api/products/${editingProduct._id}`,
+      await api.put(
+        `/api/products/${editingProduct._id}`,
         payload,
         {
           withCredentials: true,
@@ -385,7 +385,7 @@ formData.append("variants", JSON.stringify(cleanVariants));
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this product?')) return;
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/api/products/${id}`, {
+      await api.delete(`/api/products/${id}`, {
   withCredentials: true,
 });
       toast.success('Product deleted');
@@ -410,7 +410,7 @@ formData.append("variants", JSON.stringify(cleanVariants));
   if (!window.confirm(`Are you sure you want to delete ${selectedProducts.size} products?`)) return;
 
   try {
-    await axios.delete("${process.env.REACT_APP_API_URL}/api/products", {
+    await api.delete("/api/products", {
       data: { ids: Array.from(selectedProducts) }, // send array of IDs
       withCredentials: true,
     });
@@ -430,8 +430,8 @@ formData.append("variants", JSON.stringify(cleanVariants));
   try {
     const newStatus = !product.active; // flip the status
 
-    await axios.put(
-      `${process.env.REACT_APP_API_URL}/api/products/${product._id}`,
+    await api.put(
+      `/api/products/${product._id}`,
       { active: newStatus }, // only send the active field
       { withCredentials: true }
     );

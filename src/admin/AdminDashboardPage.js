@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import api from "../services/api";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -35,9 +34,7 @@ const AdminDashboardPage = () => {
     const fetchStats = async () => {
       try {
         // ✅ Fetch core stats
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/dashboard`, {
-          withCredentials: true,
-        });
+        const res = await api.get("/api/admin/dashboard");
         setStats({
           totalOrders: res.data.totalOrders || 0,
           totalRevenue: res.data.totalRevenue || 0,
@@ -47,9 +44,7 @@ const AdminDashboardPage = () => {
         });
 
         // ✅ Fetch analytics
-        const statusRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders/analytics/status`, {
-          withCredentials: true,
-        });
+        const statusRes = await api.get("/api/orders/analytics/status");
         setStatusData(
           statusRes.data.map((s) => ({
             name: s._id,
@@ -57,9 +52,7 @@ const AdminDashboardPage = () => {
           }))
         );
 
-        const salesRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders/analytics/sales`, {
-          withCredentials: true,
-        });
+        const salesRes = await api.get("/api/orders/analytics/sales");
         setSalesData(
           salesRes.data.map((s) => ({
             date: s._id,

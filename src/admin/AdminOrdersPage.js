@@ -26,9 +26,7 @@ const AdminOrdersPage = () => {
 
   const checkAdmin = async () => {
     try {
-      const res = await axios.get("${process.env.REACT_APP_API_URL}/api/auth/me", {
-        withCredentials: true,
-      });
+      const res = await api.get("/api/auth/me");
       if (res.data?.user?.role === "admin") {
         setIsAdmin(true);
         fetchOrders();
@@ -45,10 +43,8 @@ const AdminOrdersPage = () => {
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get("${process.env.REACT_APP_API_URL}/api/orders", {
-        withCredentials: true,
-      });
-      setOrders(res.data);
+      const res = await api.get("/api/orders");
+      setOrders(Array.isArray(res.data) ? res.data : []);
       setLoading(false);
     } catch (err) {
       console.error(err);
@@ -65,10 +61,9 @@ const AdminOrdersPage = () => {
   const confirmStatusChange = async () => {
     const { orderId, newStatus } = confirmModal;
     try {
-      await axios.put(
-        `${process.env.REACT_APP_API_URL}/api/orders/${orderId}/status`,
-        { status: newStatus },
-        { withCredentials: true }
+      await api.put(
+        `/api/orders/${orderId}/status`,
+        { status: newStatus }
       );
       toast.success("Order status updated");
       await fetchOrders();
@@ -78,9 +73,7 @@ const AdminOrdersPage = () => {
       if (updatedOrder) {
         setSelectedOrder({ ...updatedOrder, status: newStatus });
       } else {
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}`, {
-          withCredentials: true,
-        });
+        const res = await api.get(`/api/orders/${orderId}`);
         setSelectedOrder(res.data);
       }
     } catch (err) {
@@ -94,10 +87,8 @@ const AdminOrdersPage = () => {
   // ✅ Cancel Order by Admin
   const handleCancelOrder = async (orderId) => {
     try {
-      await axios.put(
-        `${process.env.REACT_APP_API_URL}/api/orders/${orderId}/cancel`,
-        {},
-        { withCredentials: true }
+      await api.put(
+        `/api/orders/${orderId}/cancel`
       );
       toast.success("Order cancelled successfully");
       await fetchOrders();
