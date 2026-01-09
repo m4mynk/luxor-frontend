@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import api from "../utils/api";
+import api from "../services/api";
 import toast, { Toaster } from 'react-hot-toast';
 
 const initialProductForm = {
