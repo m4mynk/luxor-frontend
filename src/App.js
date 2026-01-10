@@ -16,6 +16,12 @@ import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
 import Navbar from './components/Navbar';
 
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsAndConditions from "./pages/TermsAndConditions";
+import ShippingPolicy from "./pages/ShippingPolicy";
+import RefundPolicy from "./pages/RefundPolicy";
+import ContactUs from "./pages/ContactUs";
+
 import UserDashboard from './pages/UserDashboard';
 import Orders from './dashboard/Orders';
 import Wishlist from './dashboard/Wishlist';
@@ -96,6 +102,11 @@ function App() {
               <Route path="account" element={<Account />} />
               <Route path="orders/:id" element={<OrderDetailPage />} />
             </Route>
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+          <Route path="/shipping-policy" element={<ShippingPolicy />} />
+          <Route path="/refund-policy" element={<RefundPolicy />} />
+          <Route path="/contact-us" element={<ContactUs />} />
           </Routes>
         </Router>
       </WishlistProvider>
