@@ -254,12 +254,15 @@ if (paymentMethod === "Online") {
 
   setPlacingOrder(false);
 
-  navigate("/checkout/pay-online", {
-    state: {
+  sessionStorage.setItem(
+    "payOnlineOrder",
+    JSON.stringify({
       orderId: createdOrder._id,
       totalPrice: createdOrder.totalPrice,
-    },
-  });
+    })
+  );
+
+  navigate("/pay-online");
 
   return;
 }
