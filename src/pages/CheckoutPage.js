@@ -263,7 +263,8 @@ if (paymentMethod === "Online") {
   );
 
   console.log("➡️ Redirecting to /pay-online with order:", createdOrder._id);
-  navigate("/pay-online");
+  
+navigate("/checkout/pay-online");
 
   return;
 }
