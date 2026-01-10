@@ -262,6 +262,7 @@ if (paymentMethod === "Online") {
     })
   );
 
+  console.log("➡️ Redirecting to /pay-online with order:", createdOrder._id);
   navigate("/pay-online");
 
   return;
@@ -410,7 +411,6 @@ if (paymentMethod === "Online") {
 
       <button
         type="submit"
-        onClick={handlePlaceOrder}
         disabled={placingOrder}
         className={`w-full py-3 rounded font-semibold transition ${
           placingOrder
