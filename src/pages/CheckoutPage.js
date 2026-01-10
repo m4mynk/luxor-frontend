@@ -301,6 +301,17 @@ navigate("/checkout/pay-online");
         <input name="address" value={formData.address} onChange={handleChange} placeholder="Address" className="border p-2 rounded" required />
         <input name="city" value={formData.city} onChange={handleChange} placeholder="City" className="border p-2 rounded" required />
         <input name="postalCode" value={formData.postalCode} onChange={handleChange} placeholder="Postal Code" className="border p-2 rounded" required />
+        <button
+          type="submit"
+          disabled={placingOrder}
+          className={`w-full py-3 rounded font-semibold transition ${
+            placingOrder
+              ? "bg-gray-400 text-white cursor-not-allowed"
+              : "bg-black text-white hover:bg-gray-800"
+          }`}
+        >
+          {placingOrder ? "Placing Order..." : paymentMethod === "COD" ? "Place Order" : "Continue to Pay"}
+        </button>
       </form>
 
       {/* Shipping Options */}
@@ -410,17 +421,7 @@ navigate("/checkout/pay-online");
         <p className="text-sm text-gray-600 mt-2">Estimated Delivery: {estimatedDelivery}</p>
       </div>
 
-      <button
-        type="submit"
-        disabled={placingOrder}
-        className={`w-full py-3 rounded font-semibold transition ${
-          placingOrder
-            ? "bg-gray-400 text-white cursor-not-allowed"
-            : "bg-black text-white hover:bg-gray-800"
-        }`}
-      >
-        {placingOrder ? "Placing Order..." : paymentMethod === "COD" ? "Place Order" : "Continue to Pay"}
-      </button>
+      
     </div>
   );
 };
