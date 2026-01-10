@@ -106,7 +106,7 @@ const PayOnlinePage = () => {
 
       const data = await res.json();
 
-      if (!data?.id || !data?.amount) {
+      if (!data?.id) {
         throw new Error("Invalid Razorpay order response");
       }
 
@@ -289,7 +289,7 @@ const PayOnlinePage = () => {
 
           <button
             disabled={paying}
-            onClick={() => handlePayment("default")}
+            onClick={() => handlePayment("upi")}
             className={`px-6 sm:px-8 py-3 rounded-full font-medium transition
               ${paying
                 ? "bg-gray-700 text-gray-300 cursor-not-allowed"
