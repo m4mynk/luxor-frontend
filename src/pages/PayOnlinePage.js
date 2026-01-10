@@ -1,6 +1,6 @@
 // src/pages/PayOnlinePage.js
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 const gpay =
@@ -31,18 +31,50 @@ const loadRazorpay = () => {
 
 const PayOnlinePage = () => {
   const navigate = useNavigate();
-  const { state } = useLocation();
 
-  const totalPrice = state?.totalPrice;
+  const [orderId, setOrderId] = React.useState(null);
+  const [totalPrice, setTotalPrice] = React.useState(null);
 
   React.useEffect(() => {
-    if (!totalPrice) navigate("/checkout");
-  }, [totalPrice, navigate]);
+    const stored = sessionStorage.getItem("payOnlineOrder");
+    if (!stored) {
+      navigate("/checkout");
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(stored);
+      if (!parsed?.orderId) {
+        navigate("/checkout");
+        return;
+      }
+      setOrderId(parsed.orderId);
+      setTotalPrice(parsed.totalPrice);
+    } catch {
+      navigate("/checkout");
+    }
+  }, [navigate]);
 
   const [paying, setPaying] = React.useState(false);
   const [paymentError, setPaymentError] = React.useState("");
 
   const handlePayment = async (method) => {
+    const stored = sessionStorage.getItem("payOnlineOrder");
+    if (!stored) {
+      setPaymentError("Order session expired. Please checkout again.");
+      navigate("/checkout");
+      return;
+    }
+
+    const parsed = JSON.parse(stored);
+    if (!parsed?.orderId) {
+      setPaymentError("Invalid order. Please checkout again.");
+      navigate("/checkout");
+      return;
+    }
+
+    const orderId = parsed.orderId;
+
     setPaymentError("");
     const loaded = await loadRazorpay();
     if (!loaded) {
@@ -57,7 +89,7 @@ const PayOnlinePage = () => {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: totalPrice }),
+        body: JSON.stringify({ orderId }),
       });
 
       if (!res.ok) {
@@ -97,7 +129,7 @@ const PayOnlinePage = () => {
           netbanking: method === "netbanking",
         },
         handler: async function (response) {
-          const verifyRes = await fetch(`${process.env.REACT_APP_API_URL}/api/payment/verify`, {
+          await fetch(`${process.env.REACT_APP_API_URL}/api/payment/verify`, {
             method: "POST",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
@@ -105,12 +137,14 @@ const PayOnlinePage = () => {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
+              orderId,
             }),
           });
 
-          const verifyData = await verifyRes.json();
+          sessionStorage.removeItem("payOnlineOrder");
+
           navigate("/payment-success", {
-            state: { orderId: verifyData.orderId }
+            state: { orderId }
           });
         },
         theme: {
