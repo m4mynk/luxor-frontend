@@ -33,7 +33,6 @@ const PayOnlinePage = () => {
   const navigate = useNavigate();
 
   const [orderId, setOrderId] = React.useState(null);
-  const [totalPrice, setTotalPrice] = React.useState(null);
 
   React.useEffect(() => {
     const stored = sessionStorage.getItem("payOnlineOrder");
@@ -49,7 +48,6 @@ const PayOnlinePage = () => {
         return;
       }
       setOrderId(parsed.orderId);
-      setTotalPrice(parsed.totalPrice);
     } catch {
       navigate("/checkout");
     }
@@ -285,7 +283,7 @@ const PayOnlinePage = () => {
           <div>
             <p className="text-xs text-gray-500">Total Payable</p>
             <p className="text-xl font-semibold text-black">
-              ₹{totalPrice}
+              ₹{/* totalPrice removed */ orderId ? "—" : "—"}
             </p>
           </div>
 
