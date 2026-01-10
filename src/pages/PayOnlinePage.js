@@ -33,24 +33,16 @@ const PayOnlinePage = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
 
-  const orderId = state?.orderId;
   const totalPrice = state?.totalPrice;
 
   React.useEffect(() => {
-    if (!orderId) {
-      navigate("/checkout");
-    }
-  }, [orderId, navigate]);
+    if (!totalPrice) navigate("/checkout");
+  }, [totalPrice, navigate]);
 
   const [paying, setPaying] = React.useState(false);
   const [paymentError, setPaymentError] = React.useState("");
 
   const handlePayment = async (method) => {
-    if (!orderId) {
-      setPaymentError("Invalid order. Please try checkout again.");
-      return;
-    }
-
     setPaymentError("");
     const loaded = await loadRazorpay();
     if (!loaded) {
@@ -65,7 +57,7 @@ const PayOnlinePage = () => {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId }),
+        body: JSON.stringify({ amount: totalPrice }),
       });
 
       if (!res.ok) {
@@ -105,7 +97,7 @@ const PayOnlinePage = () => {
           netbanking: method === "netbanking",
         },
         handler: async function (response) {
-          await fetch(`${process.env.REACT_APP_API_URL}/api/payment/verify`, {
+          const verifyRes = await fetch(`${process.env.REACT_APP_API_URL}/api/payment/verify`, {
             method: "POST",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
@@ -113,12 +105,12 @@ const PayOnlinePage = () => {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
-              orderId,
             }),
           });
 
+          const verifyData = await verifyRes.json();
           navigate("/payment-success", {
-            state: { orderId }
+            state: { orderId: verifyData.orderId }
           });
         },
         theme: {
