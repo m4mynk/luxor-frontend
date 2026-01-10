@@ -33,16 +33,24 @@ const PayOnlinePage = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
 
-  if (!state) {
-    navigate("/checkout");
-    return null;
-  }
+  const orderId = state?.orderId;
+  const totalPrice = state?.totalPrice;
 
-  const { orderId, totalPrice } = state;
+  React.useEffect(() => {
+    if (!orderId) {
+      navigate("/checkout");
+    }
+  }, [orderId, navigate]);
+
   const [paying, setPaying] = React.useState(false);
   const [paymentError, setPaymentError] = React.useState("");
 
   const handlePayment = async (method) => {
+    if (!orderId) {
+      setPaymentError("Invalid order. Please try checkout again.");
+      return;
+    }
+
     setPaymentError("");
     const loaded = await loadRazorpay();
     if (!loaded) {
@@ -53,7 +61,7 @@ const PayOnlinePage = () => {
     try {
       setPaying(true);
       // Create Razorpay order (amount decided by backend)
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/payment/create-order`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/payment/order`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -61,12 +69,24 @@ const PayOnlinePage = () => {
       });
 
       if (!res.ok) {
-        const text = await res.text();
-        console.error("Payment order API failed:", text);
-        throw new Error("Failed to create payment order");
+        let errorMessage = "Failed to create payment order";
+        try {
+          const errorData = await res.json();
+          if (errorData?.message) {
+            errorMessage = errorData.message;
+          }
+        } catch {
+          // ignore JSON parse errors
+        }
+        console.error("Payment order API failed:", errorMessage);
+        throw new Error(errorMessage);
       }
 
       const data = await res.json();
+
+      if (!data?.id || !data?.amount) {
+        throw new Error("Invalid Razorpay order response");
+      }
 
       if (!process.env.REACT_APP_RAZORPAY_KEY_ID) {
         throw new Error("Razorpay key missing");
