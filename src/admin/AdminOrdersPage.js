@@ -151,6 +151,8 @@ const AdminOrdersPage = () => {
               <th className="px-4 py-3">User</th>
               <th className="px-4 py-3">Items</th>
               <th className="px-4 py-3">Total</th>
+              <th className="px-4 py-3">Payment</th>
+              <th className="px-4 py-3">Method</th>
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3">Actions</th>
             </tr>
@@ -170,6 +172,24 @@ const AdminOrdersPage = () => {
   ))}
 </td>
                   <td className="px-4 py-3 font-semibold">₹{order.totalPrice}</td>
+                  <td className="px-4 py-3">
+                    {order.isPaid ? (
+                      <span className="px-2 py-1 rounded text-xs font-medium bg-green-200 text-green-800">
+                        PAID
+                      </span>
+                    ) : (
+                      <span className="px-2 py-1 rounded text-xs font-medium bg-red-200 text-red-800">
+                        UNPAID
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
+                    {order.paymentMethod ? (
+                      order.paymentMethod === "COD" ? "COD" : "ONLINE"
+                    ) : (
+                      "—"
+                    )}
+                  </td>
                   <td className="px-4 py-3">
                     <span
                       className={`px-2 py-1 rounded text-xs font-medium ${
@@ -211,7 +231,7 @@ const AdminOrdersPage = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="6" className="text-center py-6 text-gray-500">
+                <td colSpan="8" className="text-center py-6 text-gray-500">
                   No orders found.
                 </td>
               </tr>
@@ -228,6 +248,26 @@ const AdminOrdersPage = () => {
             <p><strong>Order ID:</strong> {selectedOrder._id}</p>
             <p><strong>User:</strong> {selectedOrder.user?.email}</p>
             <p><strong>Status:</strong> {selectedOrder.status}</p>
+            <p>
+              <strong>Payment Status:</strong>{" "}
+              {selectedOrder.isPaid ? (
+                <span className="px-2 py-1 rounded text-xs font-medium bg-green-200 text-green-800">
+                  PAID
+                </span>
+              ) : (
+                <span className="px-2 py-1 rounded text-xs font-medium bg-red-200 text-red-800">
+                  UNPAID
+                </span>
+              )}
+            </p>
+            <p>
+              <strong>Payment Method:</strong>{" "}
+              {selectedOrder.paymentMethod ? (
+                selectedOrder.paymentMethod === "COD" ? "COD" : "ONLINE"
+              ) : (
+                "—"
+              )}
+            </p>
 
             <div className="mt-4">
   <h3 className="font-semibold mb-2">Items:</h3>
